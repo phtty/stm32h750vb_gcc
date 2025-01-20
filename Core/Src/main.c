@@ -18,13 +18,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "gpio.h"
 #include "memorymap.h"
 #include "usart.h"
-#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,8 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-char text[128] = {0};
-const uint8_t test_array[1024] = {0};
+char text[128]                 = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,6 +66,7 @@ static void MPU_Config(void);
  */
 int main(void)
 {
+
 	/* USER CODE BEGIN 1 */
 
 	/* USER CODE END 1 */
@@ -74,13 +74,21 @@ int main(void)
 	/* MPU Configuration--------------------------------------------------------*/
 	MPU_Config();
 
+	/* Enable the CPU Cache */
+
+	/* Enable I-Cache---------------------------------------------------------*/
+	SCB_EnableICache();
+
+	/* Enable D-Cache---------------------------------------------------------*/
+	SCB_EnableDCache();
+
 	/* MCU Configuration--------------------------------------------------------*/
 
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 
 	/* USER CODE BEGIN Init */
-
+	SCB->CACR |= 1 << 2;
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -101,8 +109,7 @@ int main(void)
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	while (1)
-	{
+	while (1) {
 		printf("print a float number:%.2f\n", num);
 		num += 0.01;
 		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
@@ -129,11 +136,6 @@ void SystemClock_Config(void)
 
 	/** Configure the main internal regulator output voltage
 	 */
-	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-
-	while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
-
-	__HAL_RCC_SYSCFG_CLK_ENABLE();
 	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
 
 	while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
@@ -190,15 +192,28 @@ void MPU_Config(void)
 	 */
 	MPU_InitStruct.Enable           = MPU_REGION_ENABLE;
 	MPU_InitStruct.Number           = MPU_REGION_NUMBER0;
-	MPU_InitStruct.BaseAddress      = 0x0;
-	MPU_InitStruct.Size             = MPU_REGION_SIZE_4GB;
-	MPU_InitStruct.SubRegionDisable = 0x87;
-	MPU_InitStruct.TypeExtField     = MPU_TEX_LEVEL0;
+	MPU_InitStruct.BaseAddress      = QSPI_BASE;
+	MPU_InitStruct.Size             = MPU_REGION_SIZE_256MB;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.TypeExtField     = MPU_TEX_LEVEL1;
 	MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
 	MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_DISABLE;
-	MPU_InitStruct.IsShareable      = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.IsShareable      = MPU_ACCESS_NOT_SHAREABLE;
 	MPU_InitStruct.IsCacheable      = MPU_ACCESS_NOT_CACHEABLE;
 	MPU_InitStruct.IsBufferable     = MPU_ACCESS_NOT_BUFFERABLE;
+
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+	/** Initializes and configures the Region and the memory to be protected
+	 */
+	MPU_InitStruct.Number           = MPU_REGION_NUMBER1;
+	MPU_InitStruct.BaseAddress      = 0x08000000;
+	MPU_InitStruct.Size             = MPU_REGION_SIZE_128KB;
+	MPU_InitStruct.SubRegionDisable = 0x0;
+	MPU_InitStruct.TypeExtField     = MPU_TEX_LEVEL0;
+	MPU_InitStruct.AccessPermission = MPU_REGION_PRIV_RO;
+	MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_ENABLE;
+	MPU_InitStruct.IsCacheable      = MPU_ACCESS_CACHEABLE;
 
 	HAL_MPU_ConfigRegion(&MPU_InitStruct);
 	/* Enables the MPU */
