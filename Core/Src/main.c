@@ -45,7 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-char text[128]                 = {0};
+char text[128] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -144,27 +144,27 @@ void SystemClock_Config(void)
 	 * in the RCC_OscInitTypeDef structure.
 	 */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-	RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
-	RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_ON;
-	RCC_OscInitStruct.PLL.PLLSource  = RCC_PLLSOURCE_HSE;
-	RCC_OscInitStruct.PLL.PLLM       = 5;
-	RCC_OscInitStruct.PLL.PLLN       = 192;
-	RCC_OscInitStruct.PLL.PLLP       = 2;
-	RCC_OscInitStruct.PLL.PLLQ       = 2;
-	RCC_OscInitStruct.PLL.PLLR       = 2;
-	RCC_OscInitStruct.PLL.PLLRGE     = RCC_PLL1VCIRANGE_2;
-	RCC_OscInitStruct.PLL.PLLVCOSEL  = RCC_PLL1VCOWIDE;
-	RCC_OscInitStruct.PLL.PLLFRACN   = 0;
+	RCC_OscInitStruct.HSEState		 = RCC_HSE_ON;
+	RCC_OscInitStruct.PLL.PLLState	 = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource	 = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLM		 = 5;
+	RCC_OscInitStruct.PLL.PLLN		 = 192;
+	RCC_OscInitStruct.PLL.PLLP		 = 2;
+	RCC_OscInitStruct.PLL.PLLQ		 = 2;
+	RCC_OscInitStruct.PLL.PLLR		 = 2;
+	RCC_OscInitStruct.PLL.PLLRGE	 = RCC_PLL1VCIRANGE_2;
+	RCC_OscInitStruct.PLL.PLLVCOSEL	 = RCC_PLL1VCOWIDE;
+	RCC_OscInitStruct.PLL.PLLFRACN	 = 0;
 	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
 		Error_Handler();
 	}
 
 	/** Initializes the CPU, AHB and APB buses clocks
 	 */
-	RCC_ClkInitStruct.ClockType      = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2 | RCC_CLOCKTYPE_D3PCLK1 | RCC_CLOCKTYPE_D1PCLK1;
-	RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
-	RCC_ClkInitStruct.SYSCLKDivider  = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.AHBCLKDivider  = RCC_HCLK_DIV2;
+	RCC_ClkInitStruct.ClockType		 = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2 | RCC_CLOCKTYPE_D3PCLK1 | RCC_CLOCKTYPE_D1PCLK1;
+	RCC_ClkInitStruct.SYSCLKSource	 = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.SYSCLKDivider	 = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.AHBCLKDivider	 = RCC_HCLK_DIV2;
 	RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
@@ -190,30 +190,30 @@ void MPU_Config(void)
 
 	/** Initializes and configures the Region and the memory to be protected
 	 */
-	MPU_InitStruct.Enable           = MPU_REGION_ENABLE;
-	MPU_InitStruct.Number           = MPU_REGION_NUMBER0;
-	MPU_InitStruct.BaseAddress      = QSPI_BASE;
-	MPU_InitStruct.Size             = MPU_REGION_SIZE_256MB;
+	MPU_InitStruct.Enable			= MPU_REGION_ENABLE;
+	MPU_InitStruct.Number			= MPU_REGION_NUMBER0;
+	MPU_InitStruct.BaseAddress		= QSPI_BASE;
+	MPU_InitStruct.Size				= MPU_REGION_SIZE_256MB;
 	MPU_InitStruct.SubRegionDisable = 0x00;
-	MPU_InitStruct.TypeExtField     = MPU_TEX_LEVEL1;
+	MPU_InitStruct.TypeExtField		= MPU_TEX_LEVEL1;
 	MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
-	MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_DISABLE;
-	MPU_InitStruct.IsShareable      = MPU_ACCESS_NOT_SHAREABLE;
-	MPU_InitStruct.IsCacheable      = MPU_ACCESS_NOT_CACHEABLE;
-	MPU_InitStruct.IsBufferable     = MPU_ACCESS_NOT_BUFFERABLE;
+	MPU_InitStruct.DisableExec		= MPU_INSTRUCTION_ACCESS_DISABLE;
+	MPU_InitStruct.IsShareable		= MPU_ACCESS_NOT_SHAREABLE;
+	MPU_InitStruct.IsCacheable		= MPU_ACCESS_NOT_CACHEABLE;
+	MPU_InitStruct.IsBufferable		= MPU_ACCESS_NOT_BUFFERABLE;
 
 	HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
 	/** Initializes and configures the Region and the memory to be protected
 	 */
-	MPU_InitStruct.Number           = MPU_REGION_NUMBER1;
-	MPU_InitStruct.BaseAddress      = 0x08000000;
-	MPU_InitStruct.Size             = MPU_REGION_SIZE_128KB;
+	MPU_InitStruct.Number			= MPU_REGION_NUMBER1;
+	MPU_InitStruct.BaseAddress		= 0x08000000;
+	MPU_InitStruct.Size				= MPU_REGION_SIZE_128KB;
 	MPU_InitStruct.SubRegionDisable = 0x0;
-	MPU_InitStruct.TypeExtField     = MPU_TEX_LEVEL0;
+	MPU_InitStruct.TypeExtField		= MPU_TEX_LEVEL0;
 	MPU_InitStruct.AccessPermission = MPU_REGION_PRIV_RO;
-	MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_ENABLE;
-	MPU_InitStruct.IsCacheable      = MPU_ACCESS_CACHEABLE;
+	MPU_InitStruct.DisableExec		= MPU_INSTRUCTION_ACCESS_ENABLE;
+	MPU_InitStruct.IsCacheable		= MPU_ACCESS_CACHEABLE;
 
 	HAL_MPU_ConfigRegion(&MPU_InitStruct);
 	/* Enables the MPU */
