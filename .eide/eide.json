@@ -398,6 +398,15 @@
                   }
                 ],
                 "folders": []
+              },
+              {
+                "name": "w25qxx",
+                "files": [
+                  {
+                    "path": "Drivers/BSP/w25qxx/w25qxx_qspi.c"
+                  }
+                ],
+                "folders": []
               }
             ]
           }
@@ -454,7 +463,8 @@
           "Drivers/STM32H7xx_HAL_Driver/Inc",
           "Drivers/CMSIS/Device/ST/STM32H7xx/Include",
           "Drivers/CMSIS/Include",
-          "Drivers/BSP/RingBuffer"
+          "Drivers/BSP/RingBuffer",
+          "Drivers/BSP/w25qxx"
         ],
         "libList": [],
         "defineList": [

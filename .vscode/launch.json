@@ -17,7 +17,7 @@
 				"interface/cmsis-dap.cfg",
 				"target/stm32h7x.cfg"
 			],
-			"svdFile": "D:/SoftWare/keil_packs/Keil/STM32H7xx_DFP/3.1.1/CMSIS/SVD/STM32H750.svd"
+			"svdFile": "D:/WORK/PROG/C/STM32_SVD/STM32H7_svd_V1.9/STM32H750.svd",
 		}
 	]
 }

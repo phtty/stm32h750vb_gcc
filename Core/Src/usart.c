@@ -7,7 +7,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2024 STMicroelectronics.
+ * Copyright (c) 2025 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -70,29 +70,11 @@ void MX_USART1_UART_Init(void)
 void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
 {
 
-	GPIO_InitTypeDef GPIO_InitStruct			 = {0};
-	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	if (uartHandle->Instance == USART1) {
 		/* USER CODE BEGIN USART1_MspInit 0 */
 
 		/* USER CODE END USART1_MspInit 0 */
-
-		/** Initializes the peripherals clock
-		 */
-		PeriphClkInitStruct.PeriphClockSelection  = RCC_PERIPHCLK_USART1;
-		PeriphClkInitStruct.PLL2.PLL2M			  = 25;
-		PeriphClkInitStruct.PLL2.PLL2N			  = 160;
-		PeriphClkInitStruct.PLL2.PLL2P			  = 2;
-		PeriphClkInitStruct.PLL2.PLL2Q			  = 16;
-		PeriphClkInitStruct.PLL2.PLL2R			  = 2;
-		PeriphClkInitStruct.PLL2.PLL2RGE		  = RCC_PLL2VCIRANGE_0;
-		PeriphClkInitStruct.PLL2.PLL2VCOSEL		  = RCC_PLL2VCOMEDIUM;
-		PeriphClkInitStruct.PLL2.PLL2FRACN		  = 0;
-		PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_PLL2;
-		if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
-			Error_Handler();
-		}
-
 		/* USART1 clock enable */
 		__HAL_RCC_USART1_CLK_ENABLE();
 
@@ -104,7 +86,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
 		GPIO_InitStruct.Pin		  = GPIO_PIN_14 | GPIO_PIN_15;
 		GPIO_InitStruct.Mode	  = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull	  = GPIO_NOPULL;
-		GPIO_InitStruct.Speed	  = GPIO_SPEED_FREQ_LOW;
+		GPIO_InitStruct.Speed	  = GPIO_SPEED_FREQ_MEDIUM;
 		GPIO_InitStruct.Alternate = GPIO_AF4_USART1;
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
