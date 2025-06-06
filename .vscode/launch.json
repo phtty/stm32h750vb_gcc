@@ -8,7 +8,7 @@
 			"name": "Cortex Debug",
 			"cwd": "${workspaceFolder}",
 			"device": "STM32H750VBT6",
-			"executable": "./bin/${workspaceFolderBasename}.elf",
+			"executable": "./build/Debug/${workspaceFolderBasename}.elf",
 			"request": "launch",
 			"type": "cortex-debug",
 			"runToEntryPoint": "main",

@@ -18,13 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "gpio.h"
+#include "dma.h"
 #include "memorymap.h"
 #include "usart.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "RingBuffer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +46,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-char text[128] = {0};
+uint8_t USART1_Rx_buf[1024] = {0};
+uint8_t USART1_Tx_buf[1024] = {0};
+RingBuffer usart1_fifo		= {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,14 +77,6 @@ int main(void)
 	/* MPU Configuration--------------------------------------------------------*/
 	MPU_Config();
 
-	/* Enable the CPU Cache */
-
-	/* Enable I-Cache---------------------------------------------------------*/
-	SCB_EnableICache();
-
-	/* Enable D-Cache---------------------------------------------------------*/
-	SCB_EnableDCache();
-
 	/* MCU Configuration--------------------------------------------------------*/
 
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -100,20 +95,19 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
+	MX_DMA_Init();
 	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
 	printf("printf fuction test OK!\n");
-	puts("puts fuction test OK!\n");
-	float num = 0;
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart1, USART1_Rx_buf, sizeof(USART1_Rx_buf));
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
-		printf("print a float number:%.2f\n", num);
-		num += 0.01;
-		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-		HAL_Delay(500);
+		if (usart1_fifo.head != usart1_fifo.tail) {
+			HAL_UART_Transmit(&huart1, USART1_Tx_buf, RB_GetByte_Bulk(&usart1_fifo, USART1_Tx_buf, RB_GetAvailable(&usart1_fifo)), 500);
+		}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

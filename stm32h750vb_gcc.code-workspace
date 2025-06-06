@@ -26,7 +26,8 @@
             "editor.autoIndent": "advanced"
         },
         "Codegeex.CompletionDelay": 0.5,
-        "Codegeex.Chat.fontSize": 13
+        "Codegeex.Chat.fontSize": 13,
+        "makefile.configureOnOpen": false
     },
     "extensions": {
         "recommendations": [

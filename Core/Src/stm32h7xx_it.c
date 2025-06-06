@@ -22,6 +22,7 @@
 #include "stm32h7xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "Ringbuffer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,9 +56,11 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern DMA_HandleTypeDef hdma_usart1_rx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
-
+extern RingBuffer usart1_fifo;
+extern uint8_t USART1_Rx_buf[1024];
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -194,6 +197,20 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+ * @brief This function handles DMA1 stream0 global interrupt.
+ */
+void DMA1_Stream0_IRQHandler(void)
+{
+	/* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
+
+	/* USER CODE END DMA1_Stream0_IRQn 0 */
+	HAL_DMA_IRQHandler(&hdma_usart1_rx);
+	/* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
+
+	/* USER CODE END DMA1_Stream0_IRQn 1 */
+}
+
+/**
  * @brief This function handles USART1 global interrupt.
  */
 void USART1_IRQHandler(void)
@@ -222,5 +239,17 @@ void EXTI15_10_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+	if (&huart1 == huart) {
+		static uint16_t Rx_buf_pos;
+		static uint8_t Rx_length;
+		Rx_length = Size - Rx_buf_pos;
 
+		RB_PutByte_Bulk(&usart1_fifo, &USART1_Rx_buf[Rx_buf_pos], Rx_length); // 将dma缓冲区的内容copy到数据帧缓冲区处理
+		Rx_buf_pos += Rx_length;
+		if (Rx_buf_pos >= 1024) // dma缓冲区越界后，将其归零
+			Rx_buf_pos = 0;
+	}
+}
 /* USER CODE END 1 */
